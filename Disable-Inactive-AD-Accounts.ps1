@@ -1,4 +1,4 @@
-# PowerShell script to disable accounts older than 90 days and move the 
+# PowerShell script to disable accounts older than 90 days and move the disable accounts to a specific OU.
 
 $inactiveThreshold = (Get-Date).AddDays(-90)
 $ou = "OU=Disabled Users,DC=yourdomain,DC=com"
