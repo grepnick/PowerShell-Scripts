@@ -8,6 +8,7 @@ while ($true) {
     $wirelessChannel = (netsh wlan show interfaces) -Match '^\s+Channel' -Replace '^\s+Channel\s+:\s+',''
     $receiveRate = (netsh wlan show interfaces) -Match '^\s+Receive' -Replace '^\s+Receive\s+rate\s+\(Mbps\)\s+:\s+',''
     $transmitRate = (netsh wlan show interfaces) -Match '^\s+Transmit' -Replace '^\s+Transmit\s+rate\s+\(Mbps\)\s+:\s+',''
-    Write-Host "Signal Strength: $signalStrength | Transmit Rate: $transmitRate Mbps | Receive Rate: $receiveRate Mbps | Wireless Band: $wirelessBand | Channel: $wirelessChannel"
+    $wirelessBSSID = (netsh wlan show interfaces) -Match '^\s+BSSID' -Replace '^\s+BSSID\s+:\s+',''
+    Write-Host "Signal Strength: $signalStrength | Transmit Rate: $transmitRate Mbps | Receive Rate: $receiveRate Mbps | Wireless Band: $wirelessBand | Channel: $wirelessChannel | AP: $wirelessBSSID"
     Start-Sleep -Seconds 1
 }
