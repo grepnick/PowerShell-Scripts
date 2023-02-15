@@ -1,4 +1,4 @@
-# It's kind of like iostat, but for wifi... and for Windows.
+# It's kind of like ifstat, but for wifi... and for Windows.
 
 Write-Host "`n`nWireless statistics (press CTRL+C to stop):`n`n"
 
