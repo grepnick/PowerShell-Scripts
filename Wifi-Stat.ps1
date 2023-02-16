@@ -10,7 +10,7 @@ while ($true) {
     $physical_address = $output | Select-String "Physical address" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
     $state = $output | Select-String "State" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
     $ssid = $output | Select-String "SSID" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
-    $bssid = $output | Select-String "BSSID" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
+    $bssid = $output | Select-String "BSSID" | ForEach-Object { $_.ToString().Split(":", 2)[1].Trim() -join ":" }
     $network_type = $output | Select-String "Network type" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
     $radio_type = $output | Select-String "Radio type" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
     $authentication = $output | Select-String "Authentication" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
