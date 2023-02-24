@@ -23,15 +23,13 @@ $mxMicrosoft = $mxRecords | Where-Object {$_ -clike "*outlook*"}
 
 # Lookup DMARC
 if ($mxGoogle) {
-    $dmarcRecord = (Resolve-DnsName -Type TXT -ErrorAction SilentlyContinue -Name "_dmarc.$DomainName").Strings | Where-Object {$_ -clike "v=DMARC1*"}
-    $dkimSelector = "google"
+        $dkimSelector = "google"
     Write-Host "`nGoogle MX detected"
 } elseif ($mxMicrosoft) {
-    $dmarcRecord = (Resolve-DnsName -Type TXT -ErrorAction SilentlyContinue -Name "_dmarc.$DomainName").Strings | Where-Object {$_ -clike "v=DMARC1*"}
-    $dkimSelector = "selector1","selector2"
+        $dkimSelector = "selector1","selector2"
     Write-Host "`nMicrosoft MX detected"
 } else {
-    Write-Host -ForegroundColor Red "No valid MX records were found for the domain $DomainName."
+    Write-Host -ForegroundColor Red "No valid Google Workspace or Microsoft 365 MX records were found for the domain $DomainName."
     exit
 }
 
@@ -45,7 +43,9 @@ if ($sfpRecord) {
     Write-Host -ForegroundColor Red  "No SPF record was found for the domain $DomainName."
 }
 
-#Print DMARC results
+#Lookup DMARC and print results
+$dmarcRecord = (Resolve-DnsName -Type TXT -ErrorAction SilentlyContinue -Name "_dmarc.$DomainName").Strings | Where-Object {$_ -clike "v=DMARC1*"}
+
 if ($dmarcRecord) {
     Write-Host  "`nDMARC record detected:"
     Write-Host -ForegroundColor Green "$dmarcRecord"
@@ -56,14 +56,14 @@ if ($dmarcRecord) {
 # Lookup DKIM and print results
 foreach ($selector in $dkimSelector) {
     $dkimRecord = (Resolve-DnsName -Type TXT -ErrorAction SilentlyContinue -Name "$selector._domainkey.$DomainName").Strings | Where-Object {$_ -like "*=DKIM1*"}
-    if (!$dkimRecord) {
-        Write-Host  -ForegroundColor Red "`nNo DKIM record was found for selector $selector._domainkey.$DomainName."
+    if ($dkimRecord) {
+    Write-Host "`nDKIM record detected for $selector._domainkey.${DomainName}:"
+    Write-Host  -ForegroundColor Green "$dkimRecord"    
+    } else {
+    Write-Host  -ForegroundColor Red "`nNo DKIM record was found for selector $selector._domainkey.$DomainName."
+    
     }
 }
 
 
-if ($dkimRecord) {
-    Write-Host "`nDKIM record detected:"
-    Write-Host  -ForegroundColor Green "$dkimRecord"
-}
 # Nice
