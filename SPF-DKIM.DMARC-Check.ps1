@@ -24,10 +24,12 @@ $mxMicrosoft = $mxRecords | Where-Object {$_ -clike "*outlook*"}
 # Lookup DMARC
 if ($mxGoogle) {
         $dkimSelector = "google"
-    Write-Host "`nGoogle Workspace MX detected"
+    Write-Host "`nGoogle Workspace MX detected:"
+    Write-Host -ForegroundColor Green "$mxGoogle"
 } elseif ($mxMicrosoft) {
         $dkimSelector = "selector1","selector2"
-    Write-Host "`nMicrosoft 365 MX detected"
+    Write-Host "`nMicrosoft 365 MX detected:"
+    Write-Host  -ForegroundColor Green "$mxMicrosoft"
 } else {
     Write-Host -ForegroundColor Red "No valid Google Workspace or Microsoft 365 MX records were found for the domain $DomainName."
     exit
@@ -64,6 +66,7 @@ $dmarcRecord = (Resolve-DnsName -Type TXT -ErrorAction SilentlyContinue -Name "_
 if ($dmarcRecord) {
     # Check for duplicate TXT records
     $dmarcRecordCount = $dmarcRecord.Count
+    # NICE
     if ($dmarcRecordCount -gt 1) {
         Write-Host -ForegroundColor Red "WARNING: Multiple DMARC TXT records found for ${DomainName}:"
         foreach ($record in $dmarcRecord) {
