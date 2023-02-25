@@ -24,10 +24,10 @@ $mxMicrosoft = $mxRecords | Where-Object {$_ -clike "*outlook*"}
 # Lookup DMARC
 if ($mxGoogle) {
         $dkimSelector = "google"
-    Write-Host "`nGoogle MX detected"
+    Write-Host "`nGoogle Workspace MX detected"
 } elseif ($mxMicrosoft) {
         $dkimSelector = "selector1","selector2"
-    Write-Host "`nMicrosoft MX detected"
+    Write-Host "`nMicrosoft 365 MX detected"
 } else {
     Write-Host -ForegroundColor Red "No valid Google Workspace or Microsoft 365 MX records were found for the domain $DomainName."
     exit
@@ -40,7 +40,7 @@ if ($sfpRecord) {
     # Check for duplicate TXT records
     $sfpRecordCount = $sfpRecord.Count
     if ($sfpRecordCount -gt 1) {
-        Write-Host -ForegroundColor Red "WARNING: Multiple SPF TXT records found for ${DomainName}:"
+        Write-Host -ForegroundColor Red "`nWARNING: Multiple SPF TXT records found for ${DomainName}:"
         foreach ($record in $sfpRecord) {
             Write-Host $record
         }
