@@ -1,4 +1,5 @@
-# Looks up SPF, DKIM, and DMARC records for Google Workspace and Microsoft 365 domains.
+# A PowerShell script that looks up SPF, DKIM, and DMARC records for Google Workspace and Microsoft 365 domains.
+# Author: Nick Marsh
 
 # Run as an interactive script or accept the first argument as a domain.
 [CmdletBinding()]
@@ -18,8 +19,8 @@ if (-not $DomainName) {
 
 # Find the MX
 $mxRecords = (Resolve-DnsName -Type MX -Name $DomainName | Sort-Object Priority).NameExchange
-$mxGoogle = $mxRecords | Where-Object {$_ -clike "*google*"}
-$mxMicrosoft = $mxRecords | Where-Object {$_ -clike "*outlook*"}
+$mxGoogle = $mxRecords | Where-Object {$_ -like "*google*"}
+$mxMicrosoft = $mxRecords | Where-Object {$_ -like "*outlook*"}
 
 # Lookup DMARC
 if ($mxGoogle) {
@@ -36,7 +37,7 @@ if ($mxGoogle) {
 }
 
 # Lookup SPF and print results
-$sfpRecord = (Resolve-DnsName -Type TXT -ErrorAction SilentlyContinue -Name $DomainName).Strings | Where-Object {$_ -clike "*v=spf1*" }
+$sfpRecord = (Resolve-DnsName -Type TXT -ErrorAction SilentlyContinue -Name $DomainName).Strings | Where-Object {$_ -like "*v=spf1*" }
 
 if ($sfpRecord) {
     # Check for duplicate TXT records
@@ -61,12 +62,12 @@ if ($sfpRecord) {
 }
 
 #Lookup DMARC and print results
-$dmarcRecord = (Resolve-DnsName -Type TXT -ErrorAction SilentlyContinue -Name "_dmarc.$DomainName").Strings | Where-Object {$_ -clike "v=DMARC1*"}
+$dmarcRecord = (Resolve-DnsName -Type TXT -ErrorAction SilentlyContinue -Name "_dmarc.$DomainName").Strings | Where-Object {$_ -like "v=DMARC1*"}
 
 if ($dmarcRecord) {
     # Check for duplicate TXT records
-    $dmarcRecordCount = $dmarcRecord.Count
     # NICE!
+    $dmarcRecordCount = $dmarcRecord.Count
     if ($dmarcRecordCount -gt 1) {
         Write-Host -ForegroundColor Red "WARNING: Multiple DMARC TXT records found for ${DomainName}:"
         foreach ($record in $dmarcRecord) {
