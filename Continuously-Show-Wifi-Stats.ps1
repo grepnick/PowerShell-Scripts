@@ -1,4 +1,4 @@
-# It's like of like the Linux watch command, but for monitoring Windows wifi.
+# It's kind of like the Linux watch command, but for monitoring Windows wifi.
 
 function CountdownTimer {
     param([int]$countdownSeconds = 5)
