@@ -6,6 +6,8 @@
 # RoamAggressiveness = Intel
 # RegROAMSensitiveLevel = Realtek
 
+# Note: The script will silently continue if one or the other does not exist.
+
 # Set the $RoamingValue which is the RoamAggressiveness RegistryValue
 # Note: The RegistryValue for Roaming is an ordnal number and the DisplayValue is a cardinal number so 0=1, 1=2, etc.
 # Valid values:
