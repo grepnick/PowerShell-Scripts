@@ -23,6 +23,11 @@ Connect-AzureAD -Credential $creds
 # Read the CSV file
 $csv = Import-Csv -Path C:\path\to\file.csv
 
+# CSV Format:
+# DestinationGroup1,SourceGroup1,SourceGroup2,etc.
+# DestinationGroup2,SourceGroup3,SourceGroup4,etc.
+# DestinationGroup3,SourceGroup4,SourceGroup5,etc.
+
 # Loop through each row in the CSV file
 foreach ($row in $csv) {
 
@@ -61,5 +66,6 @@ foreach ($row in $csv) {
     }
 }
 
+# NICE!
 # Disconnect from Office 365
 Disconnect-AzureAD
