@@ -28,6 +28,14 @@ ForEach-Object {Add-ADGroupMember -Identity "your_group_name" -Members $_.Distin
 Get-ADUser -Filter {(Enabled -eq $true) -and (PasswordNeverExpires -eq $true)} -Properties Name, SamAccountName, DistinguishedName
 ```
 
+### Get MFA Status
+```
+Get-MsolUser -all | select DisplayName,UserPrincipalName,@{N="MFA Status";`
+E={ if( $_.StrongAuthenticationMethods.IsDefault -eq $true) `
+{($_.StrongAuthenticationMethods | Where IsDefault -eq $True).MethodType} `
+else { "Disabled"}}}
+```
+
 ## Active Directory
 
 ### Import module
