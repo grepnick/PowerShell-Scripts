@@ -127,6 +127,11 @@ Get-Mailbox –Resultsize Unlimited | Set-MailboxMessageConfiguration -EchoGroup
 Set-ExternalInOutlook -Enabled $true
 ```
 
+### Disable Focused Inbox
+```
+Set-OrganizationConfig -FocusedInboxOn $false
+```
+
 ### Get information about shared mailboxes
 ```
 Get-Mailbox -Filter {recipienttypedetails -eq "SharedMailbox"} | `
