@@ -1,4 +1,4 @@
-# Windows PowerShell One-Liners
+# PowerShell One-Liners for Windows Admins
 
 My collection of PowerShell s#!t that is too complicated too remember.
 
