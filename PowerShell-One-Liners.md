@@ -28,3 +28,21 @@ ForEach-Object {Add-ADGroupMember -Identity "your_group_name" -Members $_.Distin
 Get-ADUser -Filter {(Enabled -eq $true) -and (PasswordNeverExpires -eq $true)} -Properties Name, SamAccountName, DistinguishedName
 ```
 
+## Exchange Online
+
+### instlla 
+How to Enable Users to Receive Copies of Email They Send to Microsoft 365 Groups
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Install-Module ExchangeOnlineManagement
+Connect-ExchangeOnline
+Get-Mailbox –Resultsize Unlimited | Set-MailboxMessageConfiguration -EchoGroupMessageBackToSubscribedSender $True![image](https://user-images.githubusercontent.com/124594745/224886211-2ca4d2a4-6b47-4d89-88ad-aecccc2278ba.png)
+
+
+
+
+## Random
+
+### Configure TLS 1.2
+```
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+```
