@@ -1,6 +1,6 @@
 # Windows PowerShell One-Liners
 
-My collection of PowerShell ish that is too complicated too remember.
+My collection of PowerShell s#!t that is too complicated too remember.
 
 ## Security Related
 
