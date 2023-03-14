@@ -23,7 +23,7 @@ Get-ADUser -Filter * -SearchBase "OU=your_OU,DC=your_domain,DC=com" | `
 ForEach-Object {Add-ADGroupMember -Identity "your_group_name" -Members $_.DistinguishedName}
 ```
 
-### List users who have "password never expires
+### List users who have "password never expires" enabled
 ```
 Get-ADUser -Filter {(Enabled -eq $true) -and (PasswordNeverExpires -eq $true)} -Properties Name, SamAccountName, DistinguishedName
 ```
