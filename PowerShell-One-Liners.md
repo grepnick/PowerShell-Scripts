@@ -31,13 +31,19 @@ Get-ADUser -Filter {(Enabled -eq $true) -and (PasswordNeverExpires -eq $true)} -
 ## Exchange Online
 
 ### Install Exchange Online Management
+```
 Install-Module ExchangeOnlineManagement
+```
 
 ### Connect
+```
 Connect-ExchangeOnline
+```
 
 ### Enable Users to Receive Copies of Email Sent to Microsoft 365 Groups
+```
 Get-Mailbox –Resultsize Unlimited | Set-MailboxMessageConfiguration -EchoGroupMessageBackToSubscribedSender $True
+```
 
 ## Random
 
