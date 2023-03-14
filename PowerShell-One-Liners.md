@@ -28,16 +28,22 @@ ForEach-Object {Add-ADGroupMember -Identity "your_group_name" -Members $_.Distin
 Get-ADUser -Filter {(Enabled -eq $true) -and (PasswordNeverExpires -eq $true)} -Properties Name, SamAccountName, DistinguishedName
 ```
 
+## Active Directory
+
+### Import module
+```
+Import-Module ActiveDirectory
+```
+
 ## Exchange Online
 
 ### Install Exchange Online Management
 ```
 Install-Module ExchangeOnlineManagement
 ```
-
-### Connect
+### Import & Connect
 ```
-Connect-ExchangeOnline
+Import-Module ExchangeOnlineManagement ; Connect-ExchangeOnline
 ```
 
 ### Enable Users to Receive Copies of Email Sent to Microsoft 365 Groups
@@ -45,9 +51,20 @@ Connect-ExchangeOnline
 Get-Mailbox –Resultsize Unlimited | Set-MailboxMessageConfiguration -EchoGroupMessageBackToSubscribedSender $True
 ```
 
+### Get information about shared mailboxes
+```
+Get-Mailbox -Filter {recipienttypedetails -eq "SharedMailbox"} | `
+select DisplayName,alias,UserPrincipalName,WhenMailboxCreated,EmailAddresses,`
+PrimarySmtpAddress,DeliverToMailboxAndForward,ForwardingAddress,ForwardingSmtpAddress
+```
+
 ## Random
 
 ### Configure TLS 1.2
 ```
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+```
+### Export to CSV with no type info
+```
+|  Export-csv c:\temp\asdf.csv -NoTypeInformation
 ```
