@@ -1,3 +1,10 @@
+[Active Directory Commands](#active-directory)
+[Azure Active Directory](#azure-active-directory)
+[Exchange Online](#exchange-online)
+[Windows](#windows)
+[Random](#random)
+
+
 # PowerShell One-Liners for Windows Admins
 
 My collection of PowerShell s#!t that is too complicated too remember.
@@ -97,6 +104,21 @@ Get-ADUser -Filter * -SearchBase "OU=your_OU,DC=your_domain,DC=com" | `
 ForEach-Object {Add-ADGroupMember -Identity "your_group_name" -Members $_.DistinguishedName}
 ```
 
+### Clear an AD user attribute
+```
+Get-ADUser -filter * | Set-ADUser -Clear scriptPath
+```
+
+### Find locked accounts
+```
+Search-ADAccount -LockedOut
+```
+
+### Remove disabled user accounts from groups
+```
+Get-ADUser -Filter 'Enabled -eq $false' -Properties MemberOf | ForEach-Object {Set-ADObject -Identity $_.DistinguishedName -Remove @{MemberOf= $_.MemberOf}}
+```
+
 ## Azure Active Directory
 ### Get MFA Status
 ```
@@ -137,6 +159,26 @@ Set-OrganizationConfig -FocusedInboxOn $false
 Get-Mailbox -Filter {recipienttypedetails -eq "SharedMailbox"} | `
 select DisplayName,alias,UserPrincipalName,WhenMailboxCreated,EmailAddresses,`
 PrimarySmtpAddress,DeliverToMailboxAndForward,ForwardingAddress,ForwardingSmtpAddress
+```
+## Windows
+
+### Get Uptime
+```
+systeminfo | find "System Boot Time"
+```
+or
+```
+(Get-Date) - (Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime
+```
+**Attention M$FT:** Come on bruh, can we not have an easier uptime command? Get-Uptime?!? Seriously.
+
+### Get a list of users logged into a DC
+```
+Get-WmiObject -Class Win32_LogonSession -ComputerName YourDomainControllerHostnameOrIPAddress | Where-Object {$_.LogonType -eq 2 -or $_.LogonType -eq 10} | ForEach-Object { (Get-WmiObject -Class Win32_LoggedOnUser -Filter "Dependent='Win32_LogonSession.LogonId=$_'") }
+```
+or
+```
+qwinsta /server:YourDomainControllerHostnameOrIPAddress
 ```
 
 ## Random
