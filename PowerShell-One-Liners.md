@@ -1,9 +1,8 @@
-[Active Directory Commands](#active-directory)
-[Azure Active Directory](#azure-active-directory)
-[Exchange Online](#exchange-online)
-[Windows](#windows)
-[Random](#random)
-
+- [Active Directory Commands](#active-directory)
+- [Azure Active Directory](#azure-active-directory)
+- [Exchange Online](#exchange-online)
+- [Windows](#windows)
+- [Random](#random)
 
 # PowerShell One-Liners for Windows Admins
 
@@ -116,7 +115,8 @@ Search-ADAccount -LockedOut
 
 ### Remove disabled user accounts from groups
 ```
-Get-ADUser -Filter 'Enabled -eq $false' -Properties MemberOf | ForEach-Object {Set-ADObject -Identity $_.DistinguishedName -Remove @{MemberOf= $_.MemberOf}}
+Get-ADUser -Filter 'Enabled -eq $false' -Properties MemberOf | `
+ForEach-Object {Set-ADObject -Identity $_.DistinguishedName -Remove @{MemberOf= $_.MemberOf}}
 ```
 
 ## Azure Active Directory
@@ -174,7 +174,9 @@ or
 
 ### Get a list of users logged into a DC
 ```
-Get-WmiObject -Class Win32_LogonSession -ComputerName YourDomainControllerHostnameOrIPAddress | Where-Object {$_.LogonType -eq 2 -or $_.LogonType -eq 10} | ForEach-Object { (Get-WmiObject -Class Win32_LoggedOnUser -Filter "Dependent='Win32_LogonSession.LogonId=$_'") }
+Get-WmiObject -Class Win32_LogonSession -ComputerName YourDomainControllerHostnameOrIPAddress | `
+Where-Object {$_.LogonType -eq 2 -or $_.LogonType -eq 10} | `
+ForEach-Object { (Get-WmiObject -Class Win32_LoggedOnUser -Filter "Dependent='Win32_LogonSession.LogonId=$_'") }
 ```
 or
 ```
