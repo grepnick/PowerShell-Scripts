@@ -174,7 +174,7 @@ or
 **Attention M$FT:** Come on bruh, can we not have an easier uptime command? Get-Uptime?!? Seriously.
 
 ### Get a list of users logged into a DC
-Hey it's like the "who" for \*nix systems - -except unnecissairly complex.
+Hey it's like the "who" for \*nix systems -- except unnecissairly complex.
 ```
 Get-WmiObject -Class Win32_LogonSession -ComputerName YourDomainControllerHostnameOrIPAddress | `
 Where-Object {$_.LogonType -eq 2 -or $_.LogonType -eq 10} | `
