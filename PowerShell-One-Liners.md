@@ -1,14 +1,15 @@
-- [Active Directory Commands](#active-directory)
-- [Azure Active Directory](#azure-active-directory)
-- [Exchange Online](#exchange-online)
-- [Windows](#windows)
-- [Random](#random)
-
 # PowerShell One-Liners for Windows Admins
 
 My collection of PowerShell s#!t that is too complicated too remember.
 
 **Note:** For some reason multi-line commands don't work if your past by right clicking into PowerShell, but they willwork if you press <CTRL +V>.
+
+**Jump to section:**
+- [Active Directory Commands](#active-directory)
+- [Azure Active Directory](#azure-active-directory)
+- [Exchange Online](#exchange-online)
+- [Windows](#windows)
+- [Random](#random)
 
 ## Active Directory
 
