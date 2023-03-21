@@ -66,12 +66,11 @@ function Show-SignalStrengthBarGraph {
     Write-Host -NoNewline ("-" * $numEmptyBars)
 
     Write-Host -NoNewline "] $signalStrength%"
-}
+} #NICE!
 
 Write-Host "`n`nWireless statistics (press CTRL+C to stop):`n`n"
 
 while ($true) {
-    #Write-Host -NoNewline "`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b`b"
     Clear-Host
     $output = netsh wlan show interfaces
     $name = $output | Select-String "Name" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
@@ -91,12 +90,16 @@ while ($true) {
     $receiveRate = $output | Select-String "Receive rate" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
     $transmitRate = $output | Select-String "Transmit rate" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
     $signalStrength = $output | Select-String "Signal" | ForEach-Object { $_.ToString().Split(":")[1].Trim().TrimEnd('%') }
+    $ipAddress = Get-NetIPAddress -InterfaceAlias $name | Where-Object {$_.AddressFamily -eq "IPv4"} | Select-Object -ExpandProperty IPAddress
+
+
     
     Write-Host "SSID: $ssid $bssid"
     Write-Host "Band: $wirelessBand"
     Write-Host "Channel: $wirelessChannel"
     Write-Host "TX Rate: $transmitRate Mbps"
-    Write-Host "RX Rate: $receiveRate Mbps`n"
+    Write-Host "RX Rate: $receiveRate Mbps"
+    Write-Host "IP Address: $ipAddress`n"
 
     Show-SignalStrengthBarGraph -signalStrength $signalStrength
     #Start-Sleep -Seconds 5
