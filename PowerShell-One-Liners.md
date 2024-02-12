@@ -180,6 +180,10 @@ or
 wmic product get name
 wmic product where "name='FireEye Endpoint Agent'" call uninstall
 ```
+or
+```
+Get-Package "TightVNC" | Uninstall-Package -WhatIf
+```
 
 ### Get a list of users logged into a DC
 Working on it.
