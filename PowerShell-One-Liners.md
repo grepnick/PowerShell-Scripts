@@ -175,6 +175,12 @@ or
 (Get-Date) - (Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime
 ```
 
+### Uninstall Software
+```
+wmic product get name
+wmic product where "name='FireEye Endpoint Agent'" call uninstall
+```
+
 ### Get a list of users logged into a DC
 Working on it.
 
