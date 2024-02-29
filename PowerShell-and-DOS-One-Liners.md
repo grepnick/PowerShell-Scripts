@@ -186,7 +186,14 @@ Get-Package "TightVNC" | Uninstall-Package -WhatIf
 ```
 
 ### Get a list of users logged into a DC
+```
 Working on it.
+```
+
+### Rebuild the WMI Repository
+```
+winmgmt /resetrepository
+```
 
 ## Random
 
