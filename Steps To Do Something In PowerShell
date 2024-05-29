@@ -1,0 +1,21 @@
+1. Search MS forums for someone who has had this problem before
+2. Try to run the command they provide
+3. Find that you don't have the module installed
+4. Find the command to install the module
+5. Try to install the module, failed
+6. Reopen PowerShell as an admin
+7. Try again to install the module
+8. Ignore tons of errors
+9. Load the module
+10. Run the command
+11. See alert that the module is deprecated
+12. Install the new “preview” version of the module
+13. Run the command
+14. Command not found
+15. Search for a solution
+16. 45 minutes later, find that the old module and preview version module cannot both be installed at the same time
+17. Remove the old module, failed
+18. Unload the old module because it is use
+19 Remove the old module
+20. Reinstall the new module with the -Force and -AllowClobber option
+21. Get the simple thing you wanted an hour ago
