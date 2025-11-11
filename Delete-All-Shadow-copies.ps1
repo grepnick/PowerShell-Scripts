@@ -1,0 +1,1 @@
+vssadmin delete shadows /all
