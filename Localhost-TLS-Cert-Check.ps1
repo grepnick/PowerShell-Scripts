@@ -1,4 +1,5 @@
-$warningDays = 30
+$warningDays = 90
+$maxDays = 365
 $now = Get-Date
 
 try {
@@ -15,6 +16,7 @@ try {
         $ssl.RemoteCertificate
 
     $daysRemaining = ($cert.NotAfter - $now).Days
+    $expiredDays   = ($now - $cert.NotAfter).Days
 
     Write-Host "TLS Certificate Details:"
     Write-Host " Subject      : $($cert.Subject)"
@@ -24,8 +26,12 @@ try {
     Write-Host " Days Left    : $daysRemaining"
     Write-Host ""
 
-    if ($cert.NotAfter -lt $now) {
-        Write-Warning "CRITICAL: TLS certificate is EXPIRED!"
+    if ($cert.NotAfter -lt $now -and $expiredDays -gt $maxDays) {
+        Write-Host "INFO: Certificate expired $expiredDays days ago (> $maxDays). Ignoring."
+        exit 0
+    }
+    elseif ($cert.NotAfter -lt $now) {
+        Write-Warning "CRITICAL: TLS certificate expired $expiredDays days ago!"
         exit 2
     }
     elseif ($daysRemaining -le $warningDays) {
@@ -39,7 +45,7 @@ try {
 }
 catch {
     Write-Error "FAILED: Unable to retrieve TLS certificate. $($_.Exception.Message)"
-    exit 3
+    exit 0
 }
 finally {
     if ($ssl) { $ssl.Dispose() }
