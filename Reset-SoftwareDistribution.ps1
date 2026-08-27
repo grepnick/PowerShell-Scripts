@@ -11,7 +11,7 @@
 # - Only records LastSuccess if the reset completes successfully
 # ============================================================
 
-$RegPath = 'HKLM:\SOFTWARE\BlueAlly\Remediation'
+$RegPath = 'HKLM:\SOFTWARE\grepnick\Remediation'
 $RegName = 'SoftwareDistributionCleanup'
 $MaxAge  = 30
 $Action  = 'Software Distribution cleanup'
