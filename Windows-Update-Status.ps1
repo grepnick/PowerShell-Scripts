@@ -10,6 +10,7 @@ if ($OS -match 'Windows 7|Windows 10|Windows Server 2008|Windows Server 2012') {
     exit 0
 }
 
+
 $ResultMap = @{
     0 = "Unknown"
     1 = "In Progress"
@@ -40,51 +41,60 @@ $RecentUpdates | Sort-Object Date -Descending | ForEach-Object {
 } | Format-Table -AutoSize
 
 # --- Intelligent Failure Detection ---
+$MinimumFailures = 3
+
 $GroupedByKB = $RecentUpdates | Group-Object {
     if ($_.Title -match '(KB\d+)') { $matches[1] } else { $_.Title }
 }
 
 $UnresolvedFailures = @()
-$ResolvedFailures   = @()
 
 foreach ($group in $GroupedByKB) {
-    $attempts = $group.Group | Sort-Object Date
+    # Only evaluate installation attempts (Operation 1).
+    $attempts = @(
+        $group.Group |
+            Where-Object { $_.Operation -eq 1 } |
+            Sort-Object Date
+    )
 
-    $hasFailure = $attempts | Where-Object { $_.ResultCode -in @(4, 5) }
+    if ($attempts.Count -eq 0) { continue }
 
-    if (-not $hasFailure) { continue }
+    $latestAttempt = $attempts[-1]
 
-    $latestAttempt = $attempts | Select-Object -Last 1
+    # Only alert if the latest installation attempt actually failed.
+    # Aborted, successful, and other results do not trigger an alert.
+    if ([int]$latestAttempt.ResultCode -ne 4) { continue }
 
-    if ($latestAttempt.ResultCode -eq 2) {
-        $ResolvedFailures += [PSCustomObject]@{
-            KB         = $group.Name
-            Failures   = ($hasFailure | Measure-Object).Count
-            ResolvedOn = $latestAttempt.Date.ToString("yyyy-MM-dd HH:mm")
-            Title      = $latestAttempt.Title.Substring(0, [Math]::Min(70, $latestAttempt.Title.Length))
+    # Count failures since the last fully successful installation.
+    $failureCount = 0
+
+    foreach ($attempt in $attempts) {
+        switch ([int]$attempt.ResultCode) {
+            2 { $failureCount = 0 }
+            4 { $failureCount++ }
         }
-    } else {
+    }
+
+    if ($failureCount -ge $MinimumFailures) {
         $UnresolvedFailures += [PSCustomObject]@{
-            KB          = $group.Name
-            LastAttempt = $latestAttempt.Date.ToString("yyyy-MM-dd HH:mm")
-            Status      = $ResultMap[[int]$latestAttempt.ResultCode]
-            Attempts    = ($attempts | Measure-Object).Count
-            Title       = $latestAttempt.Title.Substring(0, [Math]::Min(70, $latestAttempt.Title.Length))
+            KB             = $group.Name
+            LastAttempt    = $latestAttempt.Date.ToString("yyyy-MM-dd HH:mm")
+            Status         = "Failed"
+            FailedAttempts = $failureCount
+            Title          = $latestAttempt.Title.Substring(
+                0, [Math]::Min(70, $latestAttempt.Title.Length)
+            )
         }
     }
 }
 
-if ($ResolvedFailures) {
-    Write-Host "===== Previously Failed - Now Resolved (Ignored) =====" -ForegroundColor DarkYellow
-    $ResolvedFailures | Format-Table -AutoSize
-}
-
-if ($UnresolvedFailures) {
-    Write-Host "===== Unresolved Patch Failures =====" -ForegroundColor Red
+if ($UnresolvedFailures.Count -gt 0) {
+    Write-Host "`n===== Patches With 3+ Failed Attempts =====" -ForegroundColor Red
     $UnresolvedFailures | Format-Table -AutoSize
-    Write-Host "$($UnresolvedFailures.Count) unresolved patch failure(s) detected. Exiting with code 1." -ForegroundColor Red
+
+    Write-Host "$($UnresolvedFailures.Count) patch(es) met the failure threshold. Exiting with code 1." -ForegroundColor Red
     exit 1
 } else {
-    Write-Host "No unresolved KB patch failures in the last 30 days." -ForegroundColor Green
+    Write-Host "No KB patches meet the 3-failure alert threshold in the last 30 days." -ForegroundColor Green
     exit 0
 }
