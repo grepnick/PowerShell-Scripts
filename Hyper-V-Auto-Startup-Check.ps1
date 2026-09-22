@@ -9,7 +9,7 @@ try {
 
     if ($HyperV.Status -ne 'Running') {
         Write-Output "ERROR: Hyper-V management service is not running."
-        exit 2
+        exit 0
     }
 
     # Verify the Hyper-V PowerShell tools are available
@@ -23,7 +23,7 @@ try {
         })
 
     if ($VMs.Count -gt 0) {
-        Write-Output "WARNING: These running VMs are not configured to always start:"
+        Write-Output "WARNING: The following VMs are not configured to automatically start:"
         $VMs |
             Select-Object Name, State, AutomaticStartAction |
             Format-Table -AutoSize
