@@ -3,13 +3,12 @@ $Session = New-Object -ComObject Microsoft.Update.Session
 $Searcher = $Session.CreateUpdateSearcher()
 $HistoryCount = $Searcher.GetTotalHistoryCount()
 $AllUpdates = $Searcher.QueryHistory(0, $HistoryCount)
-$OS = (Get-CimInstance Win32_OperatingSystem).Caption
+$OS = (Get-WmiObject -Class Win32_OperatingSystem).Caption
 
 if ($OS -match 'Windows 7|Windows 10|Windows Server 2008|Windows Server 2012') {
-    Write-Warning "Unsupported operating system. Exiting."
+    Write-Warning "Unsupported operating system: $OS. Exiting."
     exit 0
 }
-
 
 $ResultMap = @{
     0 = "Unknown"
